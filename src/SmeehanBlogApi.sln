@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmeehanBlogApi", "SmeehanBlogApi\SmeehanBlogApi.csproj", "{8C3A6FC7-1D1C-4197-AF35-8119188584FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmeehanBlogApi.Tests", "SmeehanBlogApi.Tests\SmeehanBlogApi.Tests.csproj", "{B422DC5E-421A-4DE6-8B10-DD5B57F02F23}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C3A6FC7-1D1C-4197-AF35-8119188584FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3A6FC7-1D1C-4197-AF35-8119188584FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3A6FC7-1D1C-4197-AF35-8119188584FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3A6FC7-1D1C-4197-AF35-8119188584FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B422DC5E-421A-4DE6-8B10-DD5B57F02F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B422DC5E-421A-4DE6-8B10-DD5B57F02F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B422DC5E-421A-4DE6-8B10-DD5B57F02F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B422DC5E-421A-4DE6-8B10-DD5B57F02F23}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0506D890-D6EA-4A08-B8DE-DDC74B85D603}
+	EndGlobalSection
+EndGlobal
