@@ -13,23 +13,43 @@ namespace SmeehanBlogApi.Controllers
     {
         public QuotesController(IQuoteStore quoteStore)
         {
-            _quoteStore = quoteStore;
+            _quoteStore = quoteStore ?? throw new ArgumentNullException(nameof(quoteStore), "The provided IQuoteStore was null");
         }
 
         private IQuoteStore _quoteStore;
 
         [HttpGet]
         [Route("random/{numberOfQuotes}")]
-        public async Task<IEnumerable<Quote>> GetRandomQuoteAsync(int numberOfQuotes)
+        public async Task<IActionResult> GetRandomQuoteAsync(int numberOfQuotes, int beginingId = 1001)
         {
-            return await _quoteStore.GetRandomQuotesAsync(numberOfQuotes);
+            var endingId = 0;
+
+            var tableDescriptionResponse = await _quoteStore.GetTableDescription().ConfigureAwait(false);
+
+            if (tableDescriptionResponse.Table.ItemCount < int.MaxValue)
+            {
+                endingId = Convert.ToInt32(tableDescriptionResponse.Table.ItemCount) + (beginingId - 1);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("There are too many quotes in the database");
+            }
+
+            return Ok(await _quoteStore.GetRandomQuotesAsync(numberOfQuotes));
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<Quote> GetQuoteAsync(int id)
+        public async Task<IActionResult> GetQuoteAsync(int id)
         {
-            return await _quoteStore.GetItem(id);
+            var result = await _quoteStore.GetItem(id);
+            
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
     }
 }

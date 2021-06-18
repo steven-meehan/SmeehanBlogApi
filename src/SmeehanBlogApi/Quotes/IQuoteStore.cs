@@ -56,7 +56,7 @@ namespace SmeehanBlogApi.Quotes
         /// </summary>
         /// <param name="numberToGet">The total number of <see cref="Quote"/> to retrieve.</param>
         /// <returns>The random list of <see cref="IEnumerable<Quote>"/>.</returns>
-        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001);
+        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet);
 
         /// <summary>
         /// Retrieves table information from Amazon DynamoDB. 

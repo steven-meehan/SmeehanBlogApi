@@ -75,8 +75,8 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
         ///<inheritdoc/>
+        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
         {
             if(numberToGet > _data.Count)
             {
@@ -88,7 +88,7 @@ namespace SmeehanBlogApi.Quotes
 
             while (numberToGet > 0)
             {
-                var randomQuoteId = random.Next(beginingId, _data.Last().Id);
+                var randomQuoteId = random.Next(_data.First().Id, _data.Last().Id);
                 var quote = _data.Where(q => q.Id == randomQuoteId).SingleOrDefault();
 
                 if(quote != null && !quotes.Any(q=>q.Id == quote.Id))

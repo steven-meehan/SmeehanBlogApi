@@ -12,33 +12,50 @@ namespace SmeehanBlogApi.Quotes
     ///<inheritdoc/>
     public class QuoteStore : IQuoteStore
     {
-        public QuoteStore()
         /// <summary>
         /// Creates and initializes a Quote Store. 
         /// </summary>
+        /// <param name="dynamodbContext">The context to work with DynamoDb <see cref="IDynamoDBContext"/>.</param>
+        /// <param name="client">The client rquired to work with DynamoDb <see cref="IAmazonDynamoDB"/>.</param>
+        /// <param name="options">The Options used to work with the Store <see cref="IOptions<QuoteOptions>"/>.</param>
+        public QuoteStore(
+            IDynamoDBContext dynamodbContext, 
+            IAmazonDynamoDB client,
+            IOptions<QuoteOptions> options)
         {
-            _client = new AmazonDynamoDBClient();
-
-            _dbContext = new DynamoDBContext(_client, new DynamoDBContextConfig
-            {
-                //Setting the Consistent property to true ensures that you'll always get the latest 
-                ConsistentRead = true,
-                SkipVersionCheck = true
-            });
+            _dbContext = dynamodbContext ?? throw new ArgumentNullException(nameof(dynamodbContext), "The IDynamoDBContext was null");
+            _client = client ?? throw new ArgumentNullException(nameof(client), "The AmazonDynamoDBClient was null");
+            _options = options?.Value ?? throw new ArgumentNullException(nameof(options), "The options must be configured.");
         }
 
-        private readonly DynamoDBContext _dbContext;
-        private readonly AmazonDynamoDBClient _client;
+        private readonly IDynamoDBContext _dbContext;
+        private readonly IAmazonDynamoDB _client;
+        private readonly QuoteOptions _options;
 
         ///<inheritdoc/>
         public async Task AddQuoteAsync(Quote quote)
         {
+            if (quote == null)
+            {
+                throw new ArgumentNullException(nameof(quote), "A Quote must be provided");
+            }
+
             await _dbContext.SaveAsync(quote).ConfigureAwait(false);
         }
 
         ///<inheritdoc/>
         public async Task BatchStoreAsync(IEnumerable<Quote> quotes)
         {
+            if (quotes == null)
+            {
+                throw new ArgumentNullException(nameof(Quote), "quotes cannot be null");
+            }
+
+            if (!quotes.Any())
+            {
+                throw new ArgumentException(nameof(Quote), "At least one quote must be provided");
+            }
+
             var itemBatch = _dbContext.CreateBatchWrite<Quote>();
 
             foreach (var item in quotes)
@@ -58,6 +75,16 @@ namespace SmeehanBlogApi.Quotes
         ///<inheritdoc/>
         public async Task<IEnumerable<Quote>> BatchGetAsync(IEnumerable<int> ids)
         {
+            if (ids == null)
+            {
+                throw new ArgumentNullException(nameof(ids), "ids cannot be null");
+            }
+
+            if (!ids.Any())
+            {
+                throw new ArgumentException(nameof(ids), "At least one id must be provided");
+            }
+
             var batchGet = _dbContext.CreateBatchGet<Quote>();
             foreach (var id in ids)
             {
@@ -93,26 +120,16 @@ namespace SmeehanBlogApi.Quotes
             await _dbContext.DeleteAsync(quote).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
         ///<inheritdoc/>
+        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
         {
             int endingId = 0;
-            var response = await GetTableDescription().ConfigureAwait(false);
-
-            if (response.Table.ItemCount < int.MaxValue)
-            {
-                endingId = Convert.ToInt32(response.Table.ItemCount) + (beginingId - 1);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("There are too many quotes in the database");
-            }
-
+            
             var ids = new List<int>();
 
             while (numberToGet > 0)
             {
-                var number = new Random().Next(beginingId, endingId);
+                var number = new Random().Next(_options.BeginingId, endingId);
                 if (!ids.Contains(number))
                 {
                     ids.Add((int)number);
