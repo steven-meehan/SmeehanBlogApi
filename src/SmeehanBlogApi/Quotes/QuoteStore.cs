@@ -121,15 +121,13 @@ namespace SmeehanBlogApi.Quotes
         }
 
         ///<inheritdoc/>
-        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
-        {
-            int endingId = 0;
-            
+        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int numberofQuotesAvailable)
+        {         
             var ids = new List<int>();
 
             while (numberToGet > 0)
             {
-                var number = new Random().Next(_options.BeginingId, endingId);
+                var number = new Random().Next(_options.BeginingId, numberofQuotesAvailable);
                 if (!ids.Contains(number))
                 {
                     ids.Add((int)number);
