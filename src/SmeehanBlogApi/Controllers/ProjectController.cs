@@ -11,11 +11,11 @@ namespace SmeehanBlogApi.Controllers
     [EnableCors("MyPolicy")]
     public class ProjectController : Controller
     {
-        public ProjectController(IProjectStore projectStore)
+        public ProjectController(IProgressStore projectStore)
         {
             _projectStore = projectStore;
         }
-        private IProjectStore _projectStore;
+        private IProgressStore _projectStore;
 
         [HttpGet]
         [Route("active")]

@@ -6,7 +6,7 @@ namespace SmeehanBlogApi.Progress
     /// <summary>
     /// Exposes CRUD operations to work with a DynamoDb of <see cref="Project"/>.
     /// </summary>
-    public interface IProjectStore
+    public interface IProgressStore
     {
         /// <summary>
         ///  Accepts a <see cref="Project"/> and saves it in an Amazon DynamoDB Table.
