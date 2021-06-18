@@ -49,7 +49,7 @@ namespace SmeehanBlogApi.Tests
         [DataRow(1001)]
         [DataRow(1003)]
         [DataRow(1006)]
-        [DataRow(1008)]
+        [DataRow(1007)]
         public void GetProjectAsync_Id_ReturnsProject(int id)
         {
             var project = _allProjects.Where(q => q.Id == id).Single();
