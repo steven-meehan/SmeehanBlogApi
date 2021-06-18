@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1001,
+    "active": false,
+    "title": "Dead Man's Hand",
+    "type": 2,
+    "series": "Forgers",
+    "status": 8
+  },
+  {
+    "id": 1002,
+    "active": true,
+    "title": "Knavish",
+    "type": 2,
+    "series": null,
+    "status": 4
+  },
+  {
+    "id": 1003,
+    "active": false,
+    "title": "Colonization",
+    "type": 4,
+    "series": "Morven",
+    "status": 8
+  },
+  {
+    "id": 1004,
+    "active": false,
+    "title": "Fortunes",
+    "type": 4,
+    "series": "Tergarans",
+    "status": 8
+  },
+  {
+    "id": 1005,
+    "active": true,
+    "title": "Hero Call",
+    "type": 2,
+    "series": null,
+    "status": 4
+  },
+  {
+    "id": 1006,
+    "active": false,
+    "title": "Drawing Thin",
+    "type": 4,
+    "series": "Forgers",
+    "status": 8
+  },
+  {
+    "id": 1007,
+    "active": true,
+    "title": "Shades",
+    "type": 4,
+    "series": null,
+    "status": 4
+  },
+  {
+    "id": 1008,
+    "active": true,
+    "title": "Conspiracies",
+    "type": 4,
+    "series": "Harrison & Sylvia",
+    "status": 5
+  },
+  {
+    "id": 1009,
+    "active": true,
+    "title": "NaNoWriMo Project",
+    "type": 2,
+    "series": null,
+    "status": 1
+  },
+  {
+    "id": 1010,
+    "active": false,
+    "title": "Crossroads",
+    "type": 4,
+    "series": "Harrison & Sylvia",
+    "status": 5
+  }
+]
