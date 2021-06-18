@@ -69,12 +69,30 @@ namespace SmeehanBlogApi.Progress
         ///<inheritdoc/>
         public async Task<Project> GetItemAsync(int id)
         {
-            return await _dbContext.LoadAsync<Project>(id).ConfigureAwait(false);
+            var projects = await _dbContext.QueryAsync<Project>(id).GetRemainingAsync();
+                        
+            if(!projects.Any())
+            {
+                return null;
+            }
+
+            if(projects.Count > 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(projects), "Too many projects were returned");
+            }
+
+            var activeProject = projects.Where(p => p.Active);
+            if (activeProject.Any() & projects.Count() == activeProject.Count())
+            {
+                return projects.Single(p => p.Active);
+            }
+
+            return projects.Single(p => !p.Active);
         }
 
         ///<inheritdoc/>
         public async Task<IEnumerable<Project>> BatchGetAsync(IEnumerable<int> ids)
-        {
+        {//FUTURE Update this method since it has a sort key
             if (ids == null)
             {
                 throw new ArgumentNullException(nameof(ids), "ids cannot be null");
@@ -96,7 +114,7 @@ namespace SmeehanBlogApi.Progress
 
         ///<inheritdoc/>
         public async Task ModifyProgressAsync(Project project)
-        {
+        {//FUTURE Update this method since it has a sort key
             var savedItem = await _dbContext.LoadAsync(project).ConfigureAwait(false);
 
             if (savedItem == null)
@@ -109,7 +127,7 @@ namespace SmeehanBlogApi.Progress
 
         ///<inheritdoc/>
         public async Task DeleteProgressAsync(Project project)
-        {
+        {//FUTURE Update this method since it has a sort key
             var savedItem = await _dbContext.LoadAsync(project).ConfigureAwait(false);
 
             if (savedItem == null)

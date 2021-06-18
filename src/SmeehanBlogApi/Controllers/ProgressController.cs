@@ -23,7 +23,17 @@ namespace SmeehanBlogApi.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetProjectAsync(int id)
         {
-            var project = await _projectStore.GetItem(id);
+            Project project = null;
+
+            try
+            {
+                project = await _projectStore.GetItemAsync(id);
+
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return NotFound("Could not locate project");
+            }
 
             if (project == null)
             {

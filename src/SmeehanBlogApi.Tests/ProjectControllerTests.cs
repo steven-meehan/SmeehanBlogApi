@@ -46,6 +46,17 @@ namespace SmeehanBlogApi.Tests
         }
 
         [TestMethod]
+        public void GetProjectAsync_TooManyResults_ThrowArgumentOutOfRangeException()
+        {
+            Mock.Get(_progressStore).Setup(m => m.GetItemAsync(1)).ThrowsAsync(new ArgumentOutOfRangeException());
+            var actionResult = _quotesController.GetProjectAsync(1).Result;
+
+            var notFoundResult = actionResult as NotFoundObjectResult;
+
+            Assert.AreEqual(notFoundResult.Value, "Could not locate project");
+        }
+
+        [TestMethod]
         [DataRow(1001)]
         [DataRow(1003)]
         [DataRow(1006)]

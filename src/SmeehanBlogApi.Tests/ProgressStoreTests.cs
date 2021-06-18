@@ -68,8 +68,21 @@ namespace SmeehanBlogApi.Tests
         public void BatchStoreAsync_EmptyProjects_ThrowArgumentNullException() =>
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _progressStore.BatchStoreAsync(new List<Project>()));
 
+        //FUTURE
+        //Currently QueryAsync is not mockable, and while there are work arounds, I would prefer to wait until
+        //the library has been fixed.
+        //Implement below methods
+        //[TestMethod]
+        //public void GetItemAsync_ProjectNotInTable_Null()
+        //[TestMethod]
+        //public void GetItemAsync_MoreThanOneProjectInTable_ThrowArgumentOutOfRangeException()
+        //[TestMethod]
+        //public void GetItemAsync_ProjectActive_Null()
+        //[TestMethod]
+        //public void GetItemAsync_ProjectInactive_Null()
+
         [TestMethod]
-        public void BatchGetAsync_NullIds_ThrowArgumentNullException() =>
+        public void BatchGetItemAsync_NullIds_ThrowArgumentNullException() =>
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _progressStore.BatchGetAsync(null));
 
         [TestMethod]
