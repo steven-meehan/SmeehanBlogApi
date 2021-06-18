@@ -16,6 +16,17 @@ After installing the AWS Toolkit for Visual 2017 and 2019 follow the instruction
 Follow Amazon's instructions to provide your user with the neccessary permissions to work with the required 
 resources.
 
+Configure user secrets for the `DynamoDBOptions` object.
+
+```JSON
+{
+  "DynamoDB": {
+    "AccessKey" : "VALUE PULLED FROM AWS IAM",
+    "SecretKey" : "VALUE PULLED FROM AWS IAM"
+  }
+}
+```
+
 ## APIs
 
 This application powers two dynamic widgets, Quotes and Works in Progress, each with their own endpoint.
@@ -24,17 +35,6 @@ This application powers two dynamic widgets, Quotes and Works in Progress, each 
 
 This requires the pre-existing Quotes table, as defined in the `Quote.cs` file. It works with that existing 
 table to power the Quotes widget on Steven Meehan's [Blog](https://stevenmeehan.com).
-
-Configure user secrets for the `QuoteOptions` object.
-
-```JSON
-{
-  "Quote": {
-    "AccessKey" : "VALUE PULLED FROM AWS IAM",
-    "SecretKey" : "VALUE PULLED FROM AWS IAM"
-  }
-}
-```
 
 #### Methods
 
