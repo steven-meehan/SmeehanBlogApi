@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1000,
+    "speakers": [
+      {
+        "person": "Claudia",
+        "words": "I call it 'hot brown morning potion'.",
+        "order": 0
+      }
+    ],
+    "source": {
+      "story": "Bloodthirsty",
+      "series": "Dragon Prince"
+    }
+  },
+  {
+    "id": 1001,
+    "speakers": [
+      {
+        "person": "Viren",
+        "words": "But in a time of war, we must move forward.",
+        "order": 0
+      }
+    ],
+    "source": {
+      "story": "Bloodthirsty",
+      "series": "Dragon Prince"
+    }
+  },
+  {
+    "id": 1002,
+    "speakers": [
+      {
+        "person": "Callum",
+        "words": "See? No winter, no humans at the winter lodge.",
+        "order": 0
+      }
+    ],
+    "source": {
+      "story": "Bloodthirsty",
+      "series": "Dragon Prince"
+    }
+  },
+  {
+    "id": 1003,
+    "speakers": [
+      {
+        "person": "Aunt Amaya",
+        "words": "The food here is... weapons grade.",
+        "order": 0
+      }
+    ],
+    "source": {
+      "story": "Bloodthirsty",
+      "series": "Dragon Prince"
+    }
+  }
+]
