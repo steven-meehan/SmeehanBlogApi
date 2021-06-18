@@ -11,7 +11,10 @@ AWS Lambda Serverless Application to power the dynamic widgets for stevenmeehan.
 
 ## Local Configuration
 
-After installing the AWS Toolkit for Visual 2017 and 2019 follow the instructions [here](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/keys-profiles-credentials.html). Follow Amazon's instructions to provide your user with the neccessary permissions to work with the required resources.
+After installing the AWS Toolkit for Visual 2017 and 2019 follow the instructions 
+[here](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/keys-profiles-credentials.html). 
+Follow Amazon's instructions to provide your user with the neccessary permissions to work with the required 
+resources.
 
 ## APIs
 
@@ -19,7 +22,19 @@ This application powers two dynamic widgets, Quotes and Works in Progress, each 
 
 ### Quotes
 
-This requires the pre-existing Quotes table, as defined in the `Quote.cs` file. It works with that existing table to power the Quotes widget on Steven Meehan's [Blog](https://stevenmeehan.com).
+This requires the pre-existing Quotes table, as defined in the `Quote.cs` file. It works with that existing 
+table to power the Quotes widget on Steven Meehan's [Blog](https://stevenmeehan.com).
+
+Configure user secrets for the `QuoteOptions` object.
+
+```JSON
+{
+  "Quote": {
+    "AccessKey" : "VALUE PULLED FROM AWS IAM",
+    "SecretKey" : "VALUE PULLED FROM AWS IAM"
+  }
+}
+```
 
 #### Methods
 
@@ -115,7 +130,8 @@ This requires the pre-existing Quotes table, as defined in the `Quote.cs` file. 
 
 ### Progress
 
-This requires the pre-existing Progress table, as defined in the `Project.cs` file. It works with that existing table to power the Works in Progress widget on Steven Meehan's [Blog](https://stevenmeehan.com).
+This requires the pre-existing Progress table, as defined in the `Project.cs` file. It works with that 
+existing table to power the Works in Progress widget on Steven Meehan's [Blog](https://stevenmeehan.com).
 
 #### Methods
 
