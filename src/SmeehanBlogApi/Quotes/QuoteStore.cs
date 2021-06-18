@@ -1,6 +1,7 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,38 +9,53 @@ using System.Threading.Tasks;
 
 namespace SmeehanBlogApi.Quotes
 {
+    ///<inheritdoc/>
     public class QuoteStore : IQuoteStore
     {
-        public QuoteStore()
+        /// <summary>
+        /// Creates and initializes a Quote Store. 
+        /// </summary>
+        /// <param name="dynamodbContext">The context to work with DynamoDb <see cref="IDynamoDBContext"/>.</param>
+        /// <param name="client">The client rquired to work with DynamoDb <see cref="IAmazonDynamoDB"/>.</param>
+        /// <param name="options">The Options used to work with the Store <see cref="IOptions<QuoteOptions>"/>.</param>
+        public QuoteStore(
+            IDynamoDBContext dynamodbContext, 
+            IAmazonDynamoDB client,
+            IOptions<QuoteOptions> options)
         {
-            _client = new AmazonDynamoDBClient();
-
-            _dbContext = new DynamoDBContext(_client, new DynamoDBContextConfig
-            {
-                //Setting the Consistent property to true ensures that you'll always get the latest 
-                ConsistentRead = true,
-                SkipVersionCheck = true
-            });
+            _dbContext = dynamodbContext ?? throw new ArgumentNullException(nameof(dynamodbContext), "The IDynamoDBContext was null");
+            _client = client ?? throw new ArgumentNullException(nameof(client), "The AmazonDynamoDBClient was null");
+            _options = options?.Value ?? throw new ArgumentNullException(nameof(options), "The options must be configured.");
         }
 
-        private readonly DynamoDBContext _dbContext;
-        private readonly AmazonDynamoDBClient _client;
+        private readonly IDynamoDBContext _dbContext;
+        private readonly IAmazonDynamoDB _client;
+        private readonly QuoteOptions _options;
 
-        /// <summary>
-        ///  AddQuote will accept a Quote object and creates an Item on Amazon DynamoDB
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task AddQuoteAsync(Quote quote)
         {
+            if (quote == null)
+            {
+                throw new ArgumentNullException(nameof(quote), "A Quote must be provided");
+            }
+
             await _dbContext.SaveAsync(quote).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// The BatchStore Method allows you to store a list of items of type T to dynamoDb
-        /// </summary>
-        /// <param name="quotes"></param>
+        ///<inheritdoc/>
         public async Task BatchStoreAsync(IEnumerable<Quote> quotes)
         {
+            if (quotes == null)
+            {
+                throw new ArgumentNullException(nameof(Quote), "quotes cannot be null");
+            }
+
+            if (!quotes.Any())
+            {
+                throw new ArgumentException(nameof(Quote), "At least one quote must be provided");
+            }
+
             var itemBatch = _dbContext.CreateBatchWrite<Quote>();
 
             foreach (var item in quotes)
@@ -50,22 +66,25 @@ namespace SmeehanBlogApi.Quotes
             await itemBatch.ExecuteAsync().ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Retrieves a Quote based on id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public async Task<Quote> GetItem(int id)
         {
             return await _dbContext.LoadAsync<Quote>(id).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// The BatchGet Method allows you to retrieve a list of quotes out of dynamoDb
-        /// </summary>
-        /// <param name="quotes"></param>
+        ///<inheritdoc/>
         public async Task<IEnumerable<Quote>> BatchGetAsync(IEnumerable<int> ids)
         {
+            if (ids == null)
+            {
+                throw new ArgumentNullException(nameof(ids), "ids cannot be null");
+            }
+
+            if (!ids.Any())
+            {
+                throw new ArgumentException(nameof(ids), "At least one id must be provided");
+            }
+
             var batchGet = _dbContext.CreateBatchGet<Quote>();
             foreach (var id in ids)
             {
@@ -75,10 +94,7 @@ namespace SmeehanBlogApi.Quotes
             return batchGet.Results;
         }
 
-        /// <summary>
-        /// ModifyQuote  tries to load an existing Quote, modifies and saves it back. If the Item doesn’t exist, it raises an exception
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task ModifyQuoteAsync(Quote quote)
         {
             var savedItem = await _dbContext.LoadAsync(quote).ConfigureAwait(false);
@@ -91,10 +107,7 @@ namespace SmeehanBlogApi.Quotes
             await _dbContext.SaveAsync(quote);
         }
 
-        /// <summary>
-        /// Delete Quote will remove an item from DynamoDb
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task DeleteQuoteAsync(Quote quote)
         {
             var savedItem = await _dbContext.LoadAsync(quote).ConfigureAwait(false);
@@ -107,30 +120,16 @@ namespace SmeehanBlogApi.Quotes
             await _dbContext.DeleteAsync(quote).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Get Random Quotes will get n number of quotes from DynamoDb
-        /// </summary>
-        /// <param name="numberToGet"></param>
-        /// <param name="beginingId"></param>
-        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
+        ///<inheritdoc/>
+        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
         {
             int endingId = 0;
-            var response = await GetTableDescription().ConfigureAwait(false);
-
-            if (response.Table.ItemCount < int.MaxValue)
-            {
-                endingId = Convert.ToInt32(response.Table.ItemCount) + (beginingId - 1);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("There are too many quotes in the database");
-            }
-
+            
             var ids = new List<int>();
 
             while (numberToGet > 0)
             {
-                var number = new Random().Next(beginingId, endingId);
+                var number = new Random().Next(_options.BeginingId, endingId);
                 if (!ids.Contains(number))
                 {
                     ids.Add((int)number);
@@ -141,18 +140,14 @@ namespace SmeehanBlogApi.Quotes
             return await BatchGetAsync(ids).ConfigureAwait(false);
         }
 
-
-
-        //Hhelper Methods//
-        /// <summary>
-        /// This will get the description of the given table, the default value of tableName is Quote
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        private async Task<DescribeTableResponse> GetTableDescription(string tableName = "Quote")
+        ///<inheritdoc/>
+        public async Task<DescribeTableResponse> GetTableDescription()
         {
-            var request = new DescribeTableRequest();
-            request.TableName = tableName;
+            var request = new DescribeTableRequest()
+            {
+                TableName = _options.TableName,
+            };
+
             return await _client.DescribeTableAsync(request).ConfigureAwait(false);
         }
     }

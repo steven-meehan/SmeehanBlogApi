@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +9,27 @@ namespace SmeehanBlogApi.Quotes
 {
     public class MockQuoteStore : IQuoteStore
     {
+        ///<inheritdoc/>
         public Task AddQuoteAsync(Quote quote)
         {
             _data.Add(quote);
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task BatchStoreAsync(IEnumerable<Quote> quotes)
         {
             _data.AddRange(quotes);
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task<Quote> GetItem(int id)
         {
             return Task.FromResult(_data.Where<Quote>(q => q.Id == id).SingleOrDefault());
         }
 
+        ///<inheritdoc/>
         public Task<IEnumerable<Quote>> BatchGetAsync(IEnumerable<int> ids)
         {
             var quotes = new List<Quote>();
@@ -41,6 +46,7 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult<IEnumerable<Quote>>(quotes);
         }
 
+        ///<inheritdoc/>
         public Task ModifyQuoteAsync(Quote quote)
         {
             var existingQuote = _data.Where(q => q.Id == quote.Id).SingleOrDefault();
@@ -55,6 +61,7 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task DeleteQuoteAsync(Quote quote)
         {
             var existingQuote = _data.Where(q => q.Id == quote.Id).SingleOrDefault();
@@ -68,7 +75,8 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
+        ///<inheritdoc/>
+        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
         {
             if(numberToGet > _data.Count)
             {
@@ -80,7 +88,7 @@ namespace SmeehanBlogApi.Quotes
 
             while (numberToGet > 0)
             {
-                var randomQuoteId = random.Next(beginingId, _data.Last().Id);
+                var randomQuoteId = random.Next(_data.First().Id, _data.Last().Id);
                 var quote = _data.Where(q => q.Id == randomQuoteId).SingleOrDefault();
 
                 if(quote != null && !quotes.Any(q=>q.Id == quote.Id))
@@ -91,6 +99,18 @@ namespace SmeehanBlogApi.Quotes
             }
 
             return Task.FromResult<IEnumerable<Quote>>(quotes);
+        }
+
+        ///<inheritdoc/>
+        public Task<DescribeTableResponse> GetTableDescription()
+        {
+            return Task.FromResult(new DescribeTableResponse()
+            {
+                Table = new TableDescription()
+                {
+                    ItemCount = _data.Count()
+                }
+            });
         }
 
         private List<Quote> _data = new List<Quote>() 
