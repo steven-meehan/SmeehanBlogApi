@@ -10,19 +10,21 @@ namespace SmeehanBlogApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            _config = configuration;
+            _env = env;
         }
 
-        public static IConfiguration Configuration { get; private set; }
+        public static IConfiguration _config { get; private set; }
+        public static IWebHostEnvironment _env { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            services.AddScoped<IQuoteStore, QuoteStore>();
+            services.AddQuotes(_config, _env);
 
             services.AddScoped<IProjectStore, ProjectStore>();
 
