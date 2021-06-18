@@ -27,8 +27,7 @@ namespace SmeehanBlogApi
 
             services.AddDynamoDBConnection(_config, _env);
             services.AddQuotes(_config, _env);
-
-            services.AddScoped<IProjectStore, ProjectStore>();
+            services.AddProgress(_config, _env);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", localBuilder =>
             {
