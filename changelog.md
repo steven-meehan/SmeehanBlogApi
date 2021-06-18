@@ -2,6 +2,10 @@
 
 ## vNext
 
+## 1.1.1
+
+- Fixed issue with the Begining Id
+
 ## 1.1.0
 
 - Added unit tests for Quote Stack

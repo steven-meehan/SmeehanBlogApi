@@ -76,7 +76,7 @@ namespace SmeehanBlogApi.Quotes
         }
 
         ///<inheritdoc/>
-        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
+        public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int numberofQuotesAvailable)
         {
             if(numberToGet > _data.Count)
             {

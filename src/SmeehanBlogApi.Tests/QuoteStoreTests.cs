@@ -127,5 +127,9 @@ namespace SmeehanBlogApi.Tests
         [TestMethod]
         public void BatchGetAsync_EmptyIds_ThrowArgumentNullException() =>
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _quoteStore.BatchGetAsync(new List<int>()));
+
+        [TestMethod]
+        public void GetRandomQuotesAsync_NumberofQuotesAvailableSetTooLow_ThrowArgumentNullException() =>
+            Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => _quoteStore.GetRandomQuotesAsync(1001, 0));
     }
 }

@@ -121,15 +121,20 @@ namespace SmeehanBlogApi.Quotes
         }
 
         ///<inheritdoc/>
-        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet)
+        public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int numberofQuotesAvailable)
         {
-            int endingId = 0;
-            
+            if(numberofQuotesAvailable < _options.BeginingId)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(numberofQuotesAvailable), 
+                    "There was an issue getting the total number of Quotes from the DynamoDB Table");
+            }
+
             var ids = new List<int>();
 
             while (numberToGet > 0)
             {
-                var number = new Random().Next(_options.BeginingId, endingId);
+                var number = new Random().Next(_options.BeginingId, numberofQuotesAvailable);
                 if (!ids.Contains(number))
                 {
                     ids.Add((int)number);
