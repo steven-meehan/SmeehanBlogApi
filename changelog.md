@@ -2,6 +2,11 @@
 
 ## vNext
 
+## 1.2.0
+
+- Added unit tests for Progress Stack
+- Extracted the DynamoDB Connection into its own feature
+
 ## 1.1.1
 
 - Fixed issue with the Begining Id
