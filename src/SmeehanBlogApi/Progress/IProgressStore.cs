@@ -27,7 +27,7 @@ namespace SmeehanBlogApi.Progress
         /// </summary>
         /// <param name="id">The identifier, an <see cref="int"/> for the <see cref="Project"/> to be retrieved from the DynamoBD Table.</param>
         /// <returns>The requested <see cref="Project"/>.</returns>
-        public Task<Project> GetItem(int id);
+        public Task<Project> GetItemAsync(int id);
 
         /// <summary>
         /// Retrieves a list of <see cref="IEnumerable<Project>"/> from an Amazon DynamoDB Table.

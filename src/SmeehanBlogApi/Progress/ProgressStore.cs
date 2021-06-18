@@ -67,7 +67,7 @@ namespace SmeehanBlogApi.Progress
         }
 
         ///<inheritdoc/>
-        public async Task<Project> GetItem(int id)
+        public async Task<Project> GetItemAsync(int id)
         {
             return await _dbContext.LoadAsync<Project>(id).ConfigureAwait(false);
         }

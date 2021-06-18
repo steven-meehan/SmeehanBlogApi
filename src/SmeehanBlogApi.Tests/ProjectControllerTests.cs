@@ -34,10 +34,10 @@ namespace SmeehanBlogApi.Tests
             Assert.ThrowsException<ArgumentNullException>(() => new ProgressController(null));
 
         [TestMethod]
-        public void GetQuoteAsync_NotFoundId_ReturnsNull()
+        public void GetProjectAsync_NotFoundId_ReturnsNull()
         {
             var project = _allProjects.Where(q => q.Id == 1).SingleOrDefault();
-            Mock.Get(_progressStore).Setup(m => m.GetItem(1)).Returns(Task.FromResult(project));
+            Mock.Get(_progressStore).Setup(m => m.GetItemAsync(1)).Returns(Task.FromResult(project));
             var actionResult = _quotesController.GetProjectAsync(1).Result;
 
             var notFoundResult = actionResult as NotFoundObjectResult;
@@ -50,10 +50,10 @@ namespace SmeehanBlogApi.Tests
         [DataRow(1003)]
         [DataRow(1006)]
         [DataRow(1008)]
-        public void GetQuoteAsync_Id_ReturnsProject(int id)
+        public void GetProjectAsync_Id_ReturnsProject(int id)
         {
             var project = _allProjects.Where(q => q.Id == id).Single();
-            Mock.Get(_progressStore).Setup(m => m.GetItem(id)).Returns(Task.FromResult(project));
+            Mock.Get(_progressStore).Setup(m => m.GetItemAsync(id)).Returns(Task.FromResult(project));
             var actionResult = _quotesController.GetProjectAsync(id).Result;
 
             var okResult = actionResult as OkObjectResult;

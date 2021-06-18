@@ -32,7 +32,7 @@ namespace SmeehanBlogApi.Progress
         }
 
         ///<inheritdoc/>
-        public Task<Project> GetItem(int id)
+        public Task<Project> GetItemAsync(int id)
         {
             return Task.FromResult(_data.Where<Project>(p => p.Id == id).SingleOrDefault());
         }
