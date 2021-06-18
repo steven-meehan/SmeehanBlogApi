@@ -6,7 +6,7 @@
     <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <UserSecretsId>e0972f6c-c85b-4185-8e7d-76f78044b317</UserSecretsId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Steven Meehan (steven@stevenmeehan.com)</Authors>
     <Description>This Web Api pulls data from AWS services, specifically LamnbdaDB, and returns the required values.</Description>
     <Copyright>@2021</Copyright>
