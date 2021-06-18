@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmeehanBlogApi.DynamoDB;
 using SmeehanBlogApi.Progress;
 using SmeehanBlogApi.Quotes;
 
@@ -24,6 +25,7 @@ namespace SmeehanBlogApi
         {
             services.AddControllers();
 
+            services.AddDynamoDBConnection(_config, _env);
             services.AddQuotes(_config, _env);
 
             services.AddScoped<IProjectStore, ProjectStore>();

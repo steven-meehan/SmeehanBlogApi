@@ -23,24 +23,8 @@ namespace SmeehanBlogApi.Quotes
             var quoteOptions = new QuoteOptions();
             quoteSection.Bind(quoteOptions);
 
-            if (env.IsDevelopment()) //This will use a specified user in AWS IAM, credentials are pulled from secrets
+            if (env.IsDevelopment()) //This will allow the use of the MockQuoteStore
             {
-                var credentials = new BasicAWSCredentials(quoteOptions.AccessKey, quoteOptions.SecretKey);
-                var amazonDynamoDBConfig = new AmazonDynamoDBConfig()
-                {
-                    RegionEndpoint = RegionEndpoint.USEast1
-                };
-                var amazonDynamoDBClient = new AmazonDynamoDBClient(credentials, amazonDynamoDBConfig);
-                var dynamoDBContext = new DynamoDBContext(amazonDynamoDBClient, new DynamoDBContextConfig
-                {
-                    //setting the ConsistentRead property to true ensures you recieve the latest values
-                    ConsistentRead = true,
-                    SkipVersionCheck = true
-                });
-
-                services.AddSingleton<IAmazonDynamoDB>(amazonDynamoDBClient);
-                services.AddSingleton<IDynamoDBContext>(dynamoDBContext);
-
                 if (quoteOptions.MockStore)
                 {
                     services.AddScoped<IQuoteStore, MockQuoteStore>();
@@ -52,17 +36,6 @@ namespace SmeehanBlogApi.Quotes
             }
             else //This will be executed on Lambda and use the service attached to the stack
             {
-                var amazonDynamoDBClient = new AmazonDynamoDBClient();
-                var dynamoDBContext = new DynamoDBContext(amazonDynamoDBClient, new DynamoDBContextConfig
-                {
-                    //setting the ConsistentRead property to true ensures you recieve the latest values
-                    ConsistentRead = true,
-                    SkipVersionCheck = true
-                });
-
-                services.AddSingleton<IAmazonDynamoDB>(amazonDynamoDBClient);
-                services.AddSingleton<IDynamoDBContext>(dynamoDBContext);
-
                 services.AddScoped<IQuoteStore, QuoteStore>();
             }
 
