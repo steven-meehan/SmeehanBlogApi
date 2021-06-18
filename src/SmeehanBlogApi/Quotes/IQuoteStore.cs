@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Amazon.DynamoDBv2.Model;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmeehanBlogApi.Quotes
