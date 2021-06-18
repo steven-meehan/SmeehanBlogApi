@@ -9,9 +9,13 @@ using System.Threading.Tasks;
 
 namespace SmeehanBlogApi.Quotes
 {
+    ///<inheritdoc/>
     public class QuoteStore : IQuoteStore
     {
         public QuoteStore()
+        /// <summary>
+        /// Creates and initializes a Quote Store. 
+        /// </summary>
         {
             _client = new AmazonDynamoDBClient();
 
@@ -26,19 +30,13 @@ namespace SmeehanBlogApi.Quotes
         private readonly DynamoDBContext _dbContext;
         private readonly AmazonDynamoDBClient _client;
 
-        /// <summary>
-        ///  AddQuote will accept a Quote object and creates an Item on Amazon DynamoDB
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task AddQuoteAsync(Quote quote)
         {
             await _dbContext.SaveAsync(quote).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// The BatchStore Method allows you to store a list of items of type T to dynamoDb
-        /// </summary>
-        /// <param name="quotes"></param>
+        ///<inheritdoc/>
         public async Task BatchStoreAsync(IEnumerable<Quote> quotes)
         {
             var itemBatch = _dbContext.CreateBatchWrite<Quote>();
@@ -51,20 +49,13 @@ namespace SmeehanBlogApi.Quotes
             await itemBatch.ExecuteAsync().ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Retrieves a Quote based on id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public async Task<Quote> GetItem(int id)
         {
             return await _dbContext.LoadAsync<Quote>(id).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// The BatchGet Method allows you to retrieve a list of quotes out of dynamoDb
-        /// </summary>
-        /// <param name="quotes"></param>
+        ///<inheritdoc/>
         public async Task<IEnumerable<Quote>> BatchGetAsync(IEnumerable<int> ids)
         {
             var batchGet = _dbContext.CreateBatchGet<Quote>();
@@ -76,10 +67,7 @@ namespace SmeehanBlogApi.Quotes
             return batchGet.Results;
         }
 
-        /// <summary>
-        /// ModifyQuote  tries to load an existing Quote, modifies and saves it back. If the Item doesn’t exist, it raises an exception
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task ModifyQuoteAsync(Quote quote)
         {
             var savedItem = await _dbContext.LoadAsync(quote).ConfigureAwait(false);
@@ -92,10 +80,7 @@ namespace SmeehanBlogApi.Quotes
             await _dbContext.SaveAsync(quote);
         }
 
-        /// <summary>
-        /// Delete Quote will remove an item from DynamoDb
-        /// </summary>
-        /// <param name="quote"></param>
+        ///<inheritdoc/>
         public async Task DeleteQuoteAsync(Quote quote)
         {
             var savedItem = await _dbContext.LoadAsync(quote).ConfigureAwait(false);
@@ -108,12 +93,8 @@ namespace SmeehanBlogApi.Quotes
             await _dbContext.DeleteAsync(quote).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Get Random Quotes will get n number of quotes from DynamoDb
-        /// </summary>
-        /// <param name="numberToGet"></param>
-        /// <param name="beginingId"></param>
         public async Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
+        ///<inheritdoc/>
         {
             int endingId = 0;
             var response = await GetTableDescription().ConfigureAwait(false);
@@ -142,18 +123,14 @@ namespace SmeehanBlogApi.Quotes
             return await BatchGetAsync(ids).ConfigureAwait(false);
         }
 
-
-
-        //Hhelper Methods//
-        /// <summary>
-        /// This will get the description of the given table, the default value of tableName is Quote
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        private async Task<DescribeTableResponse> GetTableDescription(string tableName = "Quote")
+        ///<inheritdoc/>
+        public async Task<DescribeTableResponse> GetTableDescription()
         {
-            var request = new DescribeTableRequest();
-            request.TableName = tableName;
+            var request = new DescribeTableRequest()
+            {
+                TableName = _options.TableName,
+            };
+
             return await _client.DescribeTableAsync(request).ConfigureAwait(false);
         }
     }

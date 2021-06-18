@@ -9,23 +9,27 @@ namespace SmeehanBlogApi.Quotes
 {
     public class MockQuoteStore : IQuoteStore
     {
+        ///<inheritdoc/>
         public Task AddQuoteAsync(Quote quote)
         {
             _data.Add(quote);
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task BatchStoreAsync(IEnumerable<Quote> quotes)
         {
             _data.AddRange(quotes);
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task<Quote> GetItem(int id)
         {
             return Task.FromResult(_data.Where<Quote>(q => q.Id == id).SingleOrDefault());
         }
 
+        ///<inheritdoc/>
         public Task<IEnumerable<Quote>> BatchGetAsync(IEnumerable<int> ids)
         {
             var quotes = new List<Quote>();
@@ -42,6 +46,7 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult<IEnumerable<Quote>>(quotes);
         }
 
+        ///<inheritdoc/>
         public Task ModifyQuoteAsync(Quote quote)
         {
             var existingQuote = _data.Where(q => q.Id == quote.Id).SingleOrDefault();
@@ -56,6 +61,7 @@ namespace SmeehanBlogApi.Quotes
             return Task.FromResult(true);
         }
 
+        ///<inheritdoc/>
         public Task DeleteQuoteAsync(Quote quote)
         {
             var existingQuote = _data.Where(q => q.Id == quote.Id).SingleOrDefault();
@@ -70,6 +76,7 @@ namespace SmeehanBlogApi.Quotes
         }
 
         public Task<IEnumerable<Quote>> GetRandomQuotesAsync(int numberToGet, int beginingId = 1001)
+        ///<inheritdoc/>
         {
             if(numberToGet > _data.Count)
             {
@@ -92,6 +99,18 @@ namespace SmeehanBlogApi.Quotes
             }
 
             return Task.FromResult<IEnumerable<Quote>>(quotes);
+        }
+
+        ///<inheritdoc/>
+        public Task<DescribeTableResponse> GetTableDescription()
+        {
+            return Task.FromResult(new DescribeTableResponse()
+            {
+                Table = new TableDescription()
+                {
+                    ItemCount = _data.Count()
+                }
+            });
         }
 
         private List<Quote> _data = new List<Quote>() 
