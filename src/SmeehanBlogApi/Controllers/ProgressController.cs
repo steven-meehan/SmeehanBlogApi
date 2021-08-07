@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmeehanBlogApi.Progress;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,16 @@ namespace SmeehanBlogApi.Controllers
     [EnableCors("MyPolicy")]
     public class ProgressController : Controller
     {
-        public ProgressController(IProgressStore projectStore)
+        public ProgressController(
+            IProgressStore projectStore,
+            ILogger<ProgressController> logger)
         {
             _projectStore = projectStore ?? throw new ArgumentNullException(nameof(projectStore), "The provided IQuoteStore was null");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger), "The provided ILogger was null");
         }
 
         private IProgressStore _projectStore;
+        private ILogger<ProgressController> _logger;
 
         [HttpGet]
         [Route("{id}")]
@@ -32,11 +37,13 @@ namespace SmeehanBlogApi.Controllers
             }
             catch (ArgumentOutOfRangeException ex)
             {
+                _logger.LogError($"There was an error retrieving the project for {id}", ex);
                 return NotFound("Could not locate project");
             }
 
             if (project == null)
             {
+                _logger.LogWarning($"The provided identifier: {id}, provided no results");
                 return NotFound();
             }
 
