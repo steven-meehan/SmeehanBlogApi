@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SmeehanBlogApi.DynamoDB;
 using SmeehanBlogApi.Progress;
 using SmeehanBlogApi.Quotes;
@@ -38,12 +39,15 @@ namespace SmeehanBlogApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            var config = _config.GetAWSLoggingConfigSection();
+            loggerFactory.AddAWSProvider(config);
 
             app.UseHttpsRedirection();
 
