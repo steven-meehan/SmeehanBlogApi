@@ -2,6 +2,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -25,6 +26,7 @@ namespace SmeehanBlogApi.Tests
         private IOptions<QuoteOptions> _quoteOptions;
         private Quote _quote = new Quote();
         private List<Quote> _randomQuotes = null;
+        private ILogger<QuoteStore> _logger;
 
         [TestInitialize]
         public void Setup()
@@ -38,7 +40,8 @@ namespace SmeehanBlogApi.Tests
             _dynamodbContext = Mock.Of<IDynamoDBContext>();
 
             _quoteOptions = Options.Create(new QuoteOptions());
-            _quoteStore = new QuoteStore(_dynamodbContext, _client, _quoteOptions);
+            _logger = Mock.Of<ILogger<QuoteStore>>();
+            _quoteStore = new QuoteStore(_dynamodbContext, _client, _quoteOptions, _logger);
 
             var listOfQuotes = File.ReadAllText("../../../DataSets/ListOfQuotes.json");
             _randomQuotes = JsonConvert.DeserializeObject<IEnumerable<Quote>>(listOfQuotes).ToList();
@@ -46,15 +49,19 @@ namespace SmeehanBlogApi.Tests
 
         [TestMethod]
         public void Constructor_NullIDynamoDBContext_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(null, _client, _quoteOptions));
+            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(null, _client, _quoteOptions, _logger));
 
         [TestMethod]
         public void Constructor_NullIAmazonDynamoDB_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(_dynamodbContext, null, _quoteOptions));
+            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(_dynamodbContext, null, _quoteOptions, _logger));
 
         [TestMethod]
         public void Constructor_NullIOptions_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(_dynamodbContext, _client, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(_dynamodbContext, _client, null, _logger));
+
+        [TestMethod]
+        public void Constructor_NullLogger_ThrowArgumentNullException() =>
+            Assert.ThrowsException<ArgumentNullException>(() => new QuoteStore(_dynamodbContext, _client, _quoteOptions, null));
 
         [TestMethod]
         public void DeleteQuoteAsync_QuoteNotInTable_ThrowsAmazonDynamoDBException()
