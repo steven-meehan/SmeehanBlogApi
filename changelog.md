@@ -2,6 +2,8 @@
 
 ## vNext
 
+- Updateed the dependancies for the application
+
 ## 1.2.0
 
 - Added unit tests for Progress Stack
