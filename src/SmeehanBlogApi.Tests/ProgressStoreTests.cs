@@ -2,6 +2,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -25,6 +26,7 @@ namespace SmeehanBlogApi.Tests
         private IOptions<ProgressOptions> _progressOptions;
         private Project _project = new Project();
         private List<Project> _allProjects = null;
+        private ILogger<ProgressStore> _logger;
 
         [TestInitialize]
         public void Setup()
@@ -38,7 +40,8 @@ namespace SmeehanBlogApi.Tests
             _dynamodbContext = Mock.Of<IDynamoDBContext>();
 
             _progressOptions = Options.Create(new ProgressOptions());
-            _progressStore = new ProgressStore(_dynamodbContext, _client, _progressOptions);
+            _logger = Mock.Of<ILogger<ProgressStore>>();
+            _progressStore = new ProgressStore(_dynamodbContext, _client, _progressOptions, _logger);
 
             var listOfProjects= File.ReadAllText("../../../DataSets/ListOfProjects.json");
             _allProjects = JsonConvert.DeserializeObject<IEnumerable<Project>>(listOfProjects).ToList();
@@ -46,15 +49,19 @@ namespace SmeehanBlogApi.Tests
 
         [TestMethod]
         public void Constructor_NullIDynamoDBContext_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(null, _client, _progressOptions));
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(null, _client, _progressOptions, _logger));
 
         [TestMethod]
         public void Constructor_NullIAmazonDynamoDB_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(_dynamodbContext, null, _progressOptions));
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(_dynamodbContext, null, _progressOptions, _logger));
 
         [TestMethod]
         public void Constructor_NullIOptions_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(_dynamodbContext, _client, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(_dynamodbContext, _client, null, _logger));
+
+        [TestMethod]
+        public void Constructor_NullLogger_ThrowArgumentNullException() =>
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressStore(_dynamodbContext, _client, _progressOptions, null));
 
         [TestMethod]
         public void AddProjectAsync_NullProject_ThrowArgumentNullException() =>

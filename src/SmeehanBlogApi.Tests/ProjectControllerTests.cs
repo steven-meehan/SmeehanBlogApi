@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace SmeehanBlogApi.Tests
         private IProgressStore _progressStore;
         private List<Project> _allProjects = null;
         private ProgressController _quotesController;
+        private ILogger<ProgressController> _logger;
 
         [TestInitialize]
         public void Setup()
@@ -26,12 +28,17 @@ namespace SmeehanBlogApi.Tests
             _allProjects = JsonConvert.DeserializeObject<IEnumerable<Project>>(listOfProjects).ToList();
 
             _progressStore = Mock.Of<IProgressStore>();
-            _quotesController = new ProgressController(_progressStore);
+            _logger = Mock.Of<ILogger<ProgressController>>();
+            _quotesController = new ProgressController(_progressStore, _logger);
         }
 
         [TestMethod]
         public void Constructor_NullQuoteStore_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new ProgressController(null));
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressController(null, _logger));
+
+        [TestMethod]
+        public void Constructor_NullLogger_ThrowArgumentNullException() =>
+            Assert.ThrowsException<ArgumentNullException>(() => new ProgressController(_progressStore, null));
 
         [TestMethod]
         public void GetProjectAsync_NotFoundId_ReturnsNull()

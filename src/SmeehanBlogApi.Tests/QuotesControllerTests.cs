@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -22,6 +23,7 @@ namespace SmeehanBlogApi.Tests
         private DescribeTableResponse _describeTableResponse;
         private QuotesController _quotesController;
         private IOptions<QuoteOptions> _quoteOptions;
+        private ILogger<QuotesController> _logger;
 
         [TestInitialize]
         public void Setup()
@@ -31,7 +33,8 @@ namespace SmeehanBlogApi.Tests
 
             _quoteStore = Mock.Of<IQuoteStore>();
             _quoteOptions = Options.Create(new QuoteOptions());
-            _quotesController = new QuotesController(_quoteStore, _quoteOptions);
+            _logger = Mock.Of<ILogger<QuotesController>>();
+            _quotesController = new QuotesController(_quoteStore, _quoteOptions, _logger);
 
             _describeTableResponse = new DescribeTableResponse()
             {
@@ -44,11 +47,15 @@ namespace SmeehanBlogApi.Tests
 
         [TestMethod]
         public void Constructor_NullQuoteStore_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new QuotesController(null, _quoteOptions));
+            Assert.ThrowsException<ArgumentNullException>(() => new QuotesController(null, _quoteOptions, _logger));
 
         [TestMethod]
         public void Constructor_NullQuoteOptions_ThrowArgumentNullException() =>
-            Assert.ThrowsException<ArgumentNullException>(() => new QuotesController(_quoteStore, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new QuotesController(_quoteStore, null, _logger));
+
+        [TestMethod]
+        public void Constructor_NullLogger_ThrowArgumentNullException() =>
+            Assert.ThrowsException<ArgumentNullException>(() => new QuotesController(_quoteStore, _quoteOptions, null));
 
         [TestMethod]
         [DataRow(2)]
