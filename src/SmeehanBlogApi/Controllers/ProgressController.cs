@@ -32,6 +32,7 @@ namespace SmeehanBlogApi.Controllers
 
             try
             {
+                _logger.LogTrace("Retrieving data from database");
                 project = await _projectStore.GetItemAsync(id);
 
             }
@@ -54,6 +55,7 @@ namespace SmeehanBlogApi.Controllers
         [Route("active")]
         public async Task<IEnumerable<Project>> GetActiveProjectsAsync()
         {
+            _logger.LogTrace("Retrieving data from database");
             return await _projectStore.GetActiveProjectsAsync();
         }
     }
