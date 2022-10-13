@@ -20,6 +20,6 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.2.0" />
     <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.5.11" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.5.14" />
   </ItemGroup>
 </Project>
