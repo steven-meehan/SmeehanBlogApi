@@ -352,3 +352,7 @@ MigrationBackup/
 # AWS Error Logging
 aws-logger-errors.txt
 
+#appsetting files
+appsettings.Quotes.json
+appsettings.Progress.json
+appsettings.Dynamo.json

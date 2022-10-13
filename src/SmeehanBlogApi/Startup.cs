@@ -16,6 +16,17 @@ namespace SmeehanBlogApi
         {
             _config = configuration;
             _env = env;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(_env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"appsettings.Quotes.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.Progress.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.Dynamo.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            _config = builder.Build();
         }
 
         public static IConfiguration _config { get; private set; }

@@ -16,7 +16,7 @@ After installing the AWS Toolkit for Visual 2017 and 2019 follow the instruction
 Follow Amazon's instructions to provide your user with the neccessary permissions to work with the required 
 resources.
 
-Configure user secrets for the `DynamoDBOptions` object.
+Create an `appsettings.Dynamo.json` and configure `DynamoDBOptions` object as below:
 
 ```JSON
 {
@@ -35,6 +35,26 @@ This application powers two dynamic widgets, Quotes and Works in Progress, each 
 
 This requires the pre-existing Quotes table, as defined in the `Quote.cs` file. It works with that existing 
 table to power the Quotes widget on Steven Meehan's [Blog](https://stevenmeehan.com).
+
+#### Configuration File
+
+The configuration for `Quotes` provides good default values, but if you need to make alterations it is easy 
+to do. The first thing you need to do is create an `appsettings.Quotes.json` file. Then add the following
+to it:
+
+```JSON
+{
+  "Quote": {
+    .
+    .
+    .
+  }
+}
+```
+
+From here you can override any of the default values to the Options object `MockStore`, `BeginingId`, or 
+`TableName`. The most common value you might need to override is `MockStore` in order to perform local 
+development.
 
 #### Methods
 
@@ -132,6 +152,26 @@ table to power the Quotes widget on Steven Meehan's [Blog](https://stevenmeehan.
 
 This requires the pre-existing Progress table, as defined in the `Project.cs` file. It works with that 
 existing table to power the Works in Progress widget on Steven Meehan's [Blog](https://stevenmeehan.com).
+
+#### Configuration File
+
+The configuration for `Quotes` provides good default values, but if you need to make alterations it is easy 
+to do. The first thing you need to do is create an `appsettings.Progress.json` file. Then add the following
+to it:
+
+```JSON
+{
+  "Progress": {
+    .
+    .
+    .
+  }
+}
+```
+
+From here you can override any of the default values to the Options object `MockStore`, or `PropertyName`. 
+The most common value you might need to override is `MockStore` in order to perform local 
+development.
 
 #### Methods
 
