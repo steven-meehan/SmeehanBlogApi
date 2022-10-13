@@ -28,7 +28,7 @@ namespace SmeehanBlogApi.Controllers
         private ILogger<QuotesController> _logger;
 
         [HttpGet]
-        [Route("random/{numberOfQuotes}")]
+        [Route("random/{numberOfQuotes:int}")]
         public async Task<IActionResult> GetRandomQuoteAsync(int numberOfQuotes)
         {
             var message = $"{numberOfQuotes} quotes were requested";
@@ -56,7 +56,7 @@ namespace SmeehanBlogApi.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetQuoteAsync(int id)
         {
             var result = await _quoteStore.GetItem(id);

@@ -25,7 +25,7 @@ namespace SmeehanBlogApi.Controllers
         private ILogger<ProgressController> _logger;
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetProjectAsync(int id)
         {
             Project project = null;

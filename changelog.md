@@ -2,6 +2,10 @@
 
 ## vNext
 
+- Upgraded the framework to .Net 6
+- Added functionality to break out applicaiton settings
+for `Quotes`, `Progress`, and connection to DynamoDB
+- Added logging to the api
 - Updateed the dependancies for the application
 
 ## 1.2.0
