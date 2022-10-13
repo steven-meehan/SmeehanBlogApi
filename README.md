@@ -1,8 +1,8 @@
 # SmeehanBlogApi
 
 ## Dependancies
-- [.Net Core 3.1](https://docs.microsoft.com/en-us/dotnet/core/whats-new/dotnet-core-3-1)
-- [AWS Toolkit for Visual Studio for 2017 and 2019](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html) version 1.21.2.0.
+- [.Net 6](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-6)
+- [AWS Toolkit for Visual Studio for 2022](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html) version 1.35.2.0.
 - [AWS Lambda](https://docs.aws.amazon.com/lambda/index.html)
 - [AWS DynamoDB](https://docs.aws.amazon.com/dynamodb/)
 
