@@ -2,6 +2,8 @@
 
 ## vNext
 
+- Updating Dependancies
+
 ## 1.3.0
 
 - Upgraded the framework to .Net 6
